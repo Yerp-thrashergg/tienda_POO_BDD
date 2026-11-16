@@ -40,4 +40,15 @@ public class Bebestible extends Producto implements Calculable{
     public void asignarGas() {
         this.tieneGas = true;
     }
+
+    @Override
+    public String getTipo() {
+        return "Bebestible";
+    }
+
+    @Override
+    public String getCaracteristica() {
+        return tieneGas ? "Con gas" : "Sin gas";
+    }
+
 }

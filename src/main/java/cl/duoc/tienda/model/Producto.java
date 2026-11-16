@@ -57,4 +57,8 @@ public abstract class Producto {
     }
 
     public abstract double calcularDescuento();
+
+    public abstract String getTipo();
+    public abstract String getCaracteristica();
+
 }

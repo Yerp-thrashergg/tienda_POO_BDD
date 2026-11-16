@@ -32,17 +32,25 @@ public class ProductoController {
     public TableColumn<Producto,Double> tableColumnPrecio;
     public TableColumn<Producto,Integer> tableColumnStock;
     public Label labelMensaje;
+    public TableColumn<Producto, String> tableColumnTipo;
+    public TableColumn<Producto, String> tableColumnCaracteristica;
+    public Label labelRegistroTienda;
 
-    ArrayList<Producto> productos = new ArrayList<>();
 
     //7 métodos que realiza la labor de nuestro controlador:
+
+    // Al iniciar el proyecto
     @FXML
     public void initialize(){
         //acción para cargar valores a un combobox:
         comboBoxTipo.getItems().addAll("Bebestible","Congelado");
+
         //listener: siempre estará atento a la acción indicada:
         comboBoxTipo.setOnAction(e -> {
             String seleccion = comboBoxTipo.getValue();
+            if(seleccion == null){
+                return;
+            }
             if(seleccion.equals("Bebestible")){
                 checkBoxTieneGas.setDisable(false);
                 textFieldTemperatura.setDisable(true);
@@ -51,6 +59,8 @@ public class ProductoController {
                 checkBoxTieneGas.setDisable(true);
             }
         });
+
+        cargarTabla();
     }
 
     // Agregar Producto:
@@ -138,12 +148,19 @@ public class ProductoController {
 
     // Cargar Tabla:
     public void cargarTabla(){
-        tableColumnCodigo.setCellValueFactory(new PropertyValueFactory<>("codigo"));
-        tableColumnPrecio.setCellValueFactory(new PropertyValueFactory<>("precio"));
-        tableColumnStock.setCellValueFactory(new PropertyValueFactory<>("stock"));
+        try {
+            tableColumnCodigo.setCellValueFactory(new PropertyValueFactory<>("codigo"));
+            tableColumnPrecio.setCellValueFactory(new PropertyValueFactory<>("precio"));
+            tableColumnStock.setCellValueFactory(new PropertyValueFactory<>("stock"));
+            tableColumnTipo.setCellValueFactory(new PropertyValueFactory<>("tipo"));
+            tableColumnCaracteristica.setCellValueFactory(new PropertyValueFactory<>("caracteristica"));
 
-        ObservableList<Producto> data = FXCollections.observableArrayList(productos);
-        tableViewProductos.setItems(data);
+            ArrayList<Producto> productos = new ProductoRepository().verProductos();
+            ObservableList<Producto> data = FXCollections.observableArrayList(productos);
+            tableViewProductos.setItems(data);
+        }catch (Exception ex){
+            mostrarAlerta(ex.getMessage());
+        }
     }
 
     // Seleccionar desde la tabla:
@@ -151,9 +168,21 @@ public class ProductoController {
     public void seleccionarProducto() {
         Producto p = tableViewProductos.getSelectionModel().getSelectedItem();
         if( p != null){
-            textFieldCodigo.setText(String.valueOf(p.getCodigo()));
+            textFieldCodigo.setText(p.getCodigo());
             textFieldPrecio.setText(String.valueOf(p.getPrecio()));
-            textFieldStock.setText(String.valueOf(p.getPrecio()));
+            textFieldStock.setText(String.valueOf(p.getStock()));
+
+            if(p instanceof Bebestible){
+                Bebestible b = (Bebestible) p;
+                comboBoxTipo.setValue("Bebestible");
+                checkBoxTieneGas.setSelected(b.isTieneGas());
+                textFieldTemperatura.setText("");
+            }else{
+                Congelado c = (Congelado) p;
+                comboBoxTipo.setValue("Congelado");
+                textFieldTemperatura.setText(String.valueOf(c.getTemperatura()));
+                checkBoxTieneGas.setSelected(false);
+            }
         }
     }
 

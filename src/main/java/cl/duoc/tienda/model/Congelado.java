@@ -33,4 +33,15 @@ public class Congelado extends Producto{
     public double calcularDescuento() {
         return super.precio*0.1;
     }
+
+    @Override
+    public String getTipo() {
+        return "Congelado";
+    }
+
+    @Override
+    public String getCaracteristica() {
+        return temperatura + " °C";
+    }
+
 }
