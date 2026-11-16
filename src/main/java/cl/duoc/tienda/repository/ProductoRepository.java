@@ -35,12 +35,35 @@ public class ProductoRepository {
 
         }catch (Exception e){
             System.err.println(e.getMessage());
-            e.printStackTrace();
         }finally{
-            if(coneLocal != null){
-                coneLocal.close();
-            }
+            coneLocal.close();
         }
         return inserto;
     }
+
+    //Eliminar producto:
+    public boolean eliminarProducto(String codigo) throws SQLException {
+        boolean  elimino = false;
+        try{
+            coneLocal = new Conexion().getCone();
+            String sql = "DELETE FROM producto WHERE codigo=?";
+            PreparedStatement ps = coneLocal.prepareStatement(sql);
+            ps.setString(1,codigo);
+
+            int res = ps.executeUpdate();
+            if (res == 1){
+                elimino = true;
+            }
+
+        } catch (Exception ex) {
+            System.err.println(ex.getMessage());
+        } finally {
+            coneLocal.close();
+        }
+        return elimino;
+    }
+
+
+
+
 }

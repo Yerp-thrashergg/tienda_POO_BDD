@@ -53,6 +53,7 @@ public class ProductoController {
         });
     }
 
+    // Agregar Producto:
     @FXML
     protected void agregarProducto(){
         try{
@@ -80,7 +81,7 @@ public class ProductoController {
                 cargarTabla();
                 limpiar();
             }else{
-                mostrarAlerta("Mascota no Registrado ");
+                mostrarAlerta("Producto no Registrado ");
             }
         }catch (NumberFormatException ex){
             labelMensaje.setText("Debe ingresar números en los campos numéricos.");
@@ -89,6 +90,8 @@ public class ProductoController {
         }
     }
 
+
+    // Eliminar porducto
     @FXML
     protected void eliminarProducto(){
         try {
@@ -97,27 +100,18 @@ public class ProductoController {
             if(p==null){
                 labelMensaje.setText("Debe elegir un producto de la tabla.");
                 return;
-            }
-
-            productos.remove(p);
-            mostrarAlerta("PRODUCTO ELIMINADO.");
-            cargarTabla();
-            limpiar();
-
-            /*2. Borrando al escribir el código:
-            String codigo = textFieldCodigo.getText();
-            for(Producto pro : productos){
-                if( codigo.equalsIgnoreCase(pro.getCodigo()) ){
-                    productos.remove(pro);
-                    mostrarAlerta("PRODUCTO ELIMINADO.");
-                    limpiar();
+            }else{
+                boolean res = new ProductoRepository().eliminarProducto(p.getCodigo());
+                if (res){
+                    mostrarAlerta("producto eliminado");
                     cargarTabla();
-                    return;
+                    limpiar();
+                }else{
+                    mostrarAlerta("Producto no eliminado");
                 }
             }
-            labelMensaje.setText("PRODUCTO NO EXISTE.");*/
         } catch (Exception ex) {
-            labelMensaje.setText( ex.getMessage() );
+            mostrarAlerta(ex.getMessage());
         }
     }
 

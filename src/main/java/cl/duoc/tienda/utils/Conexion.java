@@ -15,7 +15,6 @@ public class Conexion {
                     "jdbc:mysql://127.0.0.1:3306/tienda", "root", "");
         } catch (Exception e) {
             System.err.println(e.getMessage());
-            e.printStackTrace();
         }
         return cone;
     }
